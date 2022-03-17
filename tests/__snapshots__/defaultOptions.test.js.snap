@@ -42,6 +42,7 @@ Object {
   "removeScriptTags": false,
   "removeStyleTags": false,
   "saveAs": "html",
+  "skipThirdPartyCssRequests": true,
   "skipThirdPartyRequests": false,
   "source": "build",
   "sourceMaps": true,
