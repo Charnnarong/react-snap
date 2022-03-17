@@ -15,10 +15,10 @@ const snapRun = (fs, options) =>
       // as a result you get `Error: listen EADDRINUSE :::45678`
       // to prevent this we use random port
       port: Math.floor(Math.random() * 1000 + 45000),
-      ...options
+      ...options,
     },
     {
-      fs
+      fs,
     }
   );
 
@@ -26,17 +26,17 @@ describe("validates options", () => {
   test("include option should be an non-empty array", () =>
     run({ include: "" })
       .then(() => expect(true).toEqual(false))
-      .catch(e => expect(e).toEqual("")));
+      .catch((e) => expect(e).toEqual("")));
 
   test("preloadResources option deprecated. Use preloadImages or cacheAjaxRequests", () =>
     run({ preloadResources: true })
       .then(() => expect(true).toEqual(false))
-      .catch(e => expect(e).toEqual("")));
+      .catch((e) => expect(e).toEqual("")));
 
   test("saveAs supported values are html and png", () =>
     run({ saveAs: "json" })
       .then(() => expect(true).toEqual(false))
-      .catch(e => expect(e).toEqual("")));
+      .catch((e) => expect(e).toEqual("")));
 });
 
 describe("one page", () => {
@@ -47,7 +47,7 @@ describe("one page", () => {
     createWriteStreamMock,
     filesCreated,
     content,
-    name
+    name,
   } = mockFs();
   beforeAll(() => snapRun(fs, { source }));
   test("crawls / and saves as index.html to the same folder", () => {
@@ -59,7 +59,7 @@ describe("one page", () => {
   });
   test("copies (original) index.html to 200.html", () => {
     expect(createReadStreamMock.mock.calls).toEqual([
-      [`/${source}/index.html`]
+      [`/${source}/index.html`],
     ]);
     expect(createWriteStreamMock.mock.calls).toEqual([[`/${source}/200.html`]]);
   });
@@ -71,7 +71,7 @@ describe("saveAs png", () => {
   const {
     fs: mockedFs,
     createReadStreamMock,
-    createWriteStreamMock
+    createWriteStreamMock,
   } = mockFs();
   beforeAll(() => snapRun(mockedFs, { source, saveAs: "png" }));
   afterAll(() => writeFileSpy.mockClear());
@@ -81,7 +81,7 @@ describe("saveAs png", () => {
   });
   test("copies (original) index.html to 200.html", () => {
     expect(createReadStreamMock.mock.calls).toEqual([
-      [`/${source}/index.html`]
+      [`/${source}/index.html`],
     ]);
     expect(createWriteStreamMock.mock.calls).toEqual([[`/${source}/200.html`]]);
   });
@@ -93,7 +93,7 @@ describe("saveAs jpeg", () => {
   const {
     fs: mockedFs,
     createReadStreamMock,
-    createWriteStreamMock
+    createWriteStreamMock,
   } = mockFs();
   beforeAll(() => snapRun(mockedFs, { source, saveAs: "jpeg" }));
   afterAll(() => writeFileSpy.mockClear());
@@ -105,7 +105,7 @@ describe("saveAs jpeg", () => {
   });
   test("copies (original) index.html to 200.html", () => {
     expect(createReadStreamMock.mock.calls).toEqual([
-      [`/${source}/index.html`]
+      [`/${source}/index.html`],
     ]);
     expect(createWriteStreamMock.mock.calls).toEqual([[`/${source}/200.html`]]);
   });
@@ -120,7 +120,7 @@ describe("respects destination", () => {
     createWriteStreamMock,
     filesCreated,
     content,
-    name
+    name,
   } = mockFs();
   beforeAll(() => snapRun(fs, { source, destination }));
   test("crawls / and saves as index.html to destination folder", () => {
@@ -129,18 +129,18 @@ describe("respects destination", () => {
   });
   test("copies (original) index.html to 200.html (to source folder)", () => {
     expect(createReadStreamMock.mock.calls[0]).toEqual([
-      `/${source}/index.html`
+      `/${source}/index.html`,
     ]);
     expect(createWriteStreamMock.mock.calls[0]).toEqual([
-      `/${source}/200.html`
+      `/${source}/200.html`,
     ]);
   });
   test("copies (original) index.html to 200.html (to destination folder)", () => {
     expect(createReadStreamMock.mock.calls[1]).toEqual([
-      `/${source}/index.html`
+      `/${source}/index.html`,
     ]);
     expect(createWriteStreamMock.mock.calls[1]).toEqual([
-      `/${destination}/200.html`
+      `/${destination}/200.html`,
     ]);
   });
 });
@@ -153,7 +153,7 @@ describe("many pages", () => {
     createWriteStreamMock,
     filesCreated,
     name,
-    names
+    names,
   } = mockFs();
   beforeAll(() => snapRun(fs, { source }));
   test("crawls all links and saves as index.html in separate folders", () => {
@@ -176,7 +176,7 @@ describe("many pages", () => {
   });
   test("copies (original) index.html to 200.html", () => {
     expect(createReadStreamMock.mock.calls).toEqual([
-      [`/${source}/index.html`]
+      [`/${source}/index.html`],
     ]);
     expect(createWriteStreamMock.mock.calls).toEqual([[`/${source}/200.html`]]);
   });
@@ -189,13 +189,13 @@ describe("possible to disable crawl option", () => {
     createReadStreamMock,
     createWriteStreamMock,
     filesCreated,
-    names
+    names,
   } = mockFs();
   beforeAll(() =>
     snapRun(fs, {
       source,
       crawl: false,
-      include: ["/1", "/2/", "/3#test", "/4?test"]
+      include: ["/1", "/2/", "/3#test", "/4?test"],
     })
   );
   test("crawls all links and saves as index.html in separate folders", () => {
@@ -206,13 +206,13 @@ describe("possible to disable crawl option", () => {
         `/${source}/1/index.html`, // without slash in the end
         `/${source}/2/index.html`, // with slash in the end
         `/${source}/3/index.html`, // ignores hash
-        `/${source}/4/index.html` // ignores query
+        `/${source}/4/index.html`, // ignores query
       ])
     );
   });
   test("copies (original) index.html to 200.html", () => {
     expect(createReadStreamMock.mock.calls).toEqual([
-      [`/${source}/index.html`]
+      [`/${source}/index.html`],
     ]);
     expect(createWriteStreamMock.mock.calls).toEqual([[`/${source}/200.html`]]);
   });
@@ -225,7 +225,7 @@ describe("inlineCss - small file", () => {
     snapRun(fs, {
       source,
       inlineCss: true,
-      include: ["/with-small-css.html"]
+      include: ["/with-small-css.html"],
     })
   );
   // 1. I want to change this behaviour
@@ -311,7 +311,7 @@ describe("ignoreForPreload", () => {
       source,
       include,
       http2PushManifest: true,
-      ignoreForPreload: ["big.css"]
+      ignoreForPreload: ["big.css"],
     })
   );
   test("writes http2 manifest file", () => {
@@ -352,7 +352,7 @@ describe("removeStyleTags", () => {
     snapRun(fs, {
       source,
       include,
-      removeStyleTags: true
+      removeStyleTags: true,
     })
   );
   test("removes all <style>", () => {
@@ -403,7 +403,7 @@ describe("handles JS errors", () => {
   test("returns rejected promise", () =>
     snapRun(fs, { source, include })
       .then(() => expect(true).toEqual(false))
-      .catch(e => expect(e).toEqual("")));
+      .catch((e) => expect(e).toEqual("")));
 });
 
 describe("You can not run react-snap twice", () => {
@@ -412,7 +412,7 @@ describe("You can not run react-snap twice", () => {
   test("returns rejected promise", () =>
     snapRun(fs, { source })
       .then(() => expect(true).toEqual(false))
-      .catch(e => expect(e).toEqual("")));
+      .catch((e) => expect(e).toEqual("")));
 });
 
 describe("fixWebpackChunksIssue", () => {
@@ -511,21 +511,17 @@ describe("cacheAjaxRequests", () => {
 describe("don't crawl localhost links on different port", () => {
   const source = "tests/examples/other";
   const include = ["/localhost-links-different-port.html"];
-  
+
   const { fs, filesCreated, names } = mockFs();
 
   beforeAll(() => snapRun(fs, { source, include }));
   test("only one file is crawled", () => {
     expect(filesCreated()).toEqual(1);
     expect(names()).toEqual(
-      expect.arrayContaining([
-        `/${source}/localhost-links-different-port.html`
-      ])
+      expect.arrayContaining([`/${source}/localhost-links-different-port.html`])
     );
   });
-  
 });
-
 
 describe("svgLinks", () => {
   const source = "tests/examples/other";
@@ -548,7 +544,7 @@ describe("history.pushState", () => {
       expect.arrayContaining([
         `/${source}/404.html`,
         `/${source}/history-push.html`,
-        `/${source}/hello/index.html`
+        `/${source}/hello/index.html`,
       ])
     );
   });
@@ -565,7 +561,7 @@ describe("history.pushState in sub-directory", () => {
       expect.arrayContaining([
         `/${source}/404.html`,
         `/${source}/history-push.html`,
-        `/${source}/hello/index.html`
+        `/${source}/hello/index.html`,
       ])
     );
   });
@@ -583,7 +579,7 @@ describe("history.pushState two redirects to the same file", () => {
         `/${source}/404.html`,
         `/${source}/history-push.html`,
         `/${source}/hello/index.html`,
-        `/${source}/history-push-more.html`
+        `/${source}/history-push-more.html`,
       ])
     );
   });

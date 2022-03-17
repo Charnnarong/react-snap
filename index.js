@@ -184,7 +184,10 @@ const preloadResources = (opt) => {
         const json = await response.json();
         ajaxCache[route] = json;
       } else if (http2PushManifest && /\.(js)$/.test(responseUrl)) {
-        const fileName = url.parse(responseUrl).pathname.split("/").pop();
+        const fileName = url
+          .parse(responseUrl)
+          .pathname.split("/")
+          .pop();
         if (!ignoreForPreload.includes(fileName)) {
           http2PushManifestItems.push({
             link: route,
@@ -192,7 +195,10 @@ const preloadResources = (opt) => {
           });
         }
       } else if (http2PushManifest && /\.(css)$/.test(responseUrl)) {
-        const fileName = url.parse(responseUrl).pathname.split("/").pop();
+        const fileName = url
+          .parse(responseUrl)
+          .pathname.split("/")
+          .pop();
         if (!ignoreForPreload.includes(fileName)) {
           http2PushManifestItems.push({
             link: route,
@@ -301,9 +307,8 @@ const inlineCss = async (opt) => {
 
   if (cssSize > twentyKb)
     console.log(
-      `⚠️  warning: inlining CSS more than 20kb (${
-        cssSize / 1024
-      }kb, ${cssStrategy})`
+      `⚠️  warning: inlining CSS more than 20kb (${cssSize /
+        1024}kb, ${cssStrategy})`
     );
 
   if (cssStrategy === "critical") {
@@ -699,8 +704,11 @@ const run = async (userOptions, { fs } = { fs: nativeFs }) => {
     publicPath,
     sourceDir,
     beforeFetch: async ({ page, route }) => {
-      const { preloadImages, cacheAjaxRequests, preconnectThirdParty } =
-        options;
+      const {
+        preloadImages,
+        cacheAjaxRequests,
+        preconnectThirdParty,
+      } = options;
       if (
         preloadImages ||
         cacheAjaxRequests ||
